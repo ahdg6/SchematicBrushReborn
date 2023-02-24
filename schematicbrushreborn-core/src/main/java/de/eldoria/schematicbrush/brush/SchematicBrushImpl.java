@@ -23,12 +23,15 @@ import de.eldoria.eldoutilities.messages.MessageSender;
 import de.eldoria.schematicbrush.brush.config.BrushSettings;
 import de.eldoria.schematicbrush.brush.config.BrushSettingsRegistry;
 import de.eldoria.schematicbrush.brush.config.builder.BrushBuilder;
+import de.eldoria.schematicbrush.brush.history.BrushHistory;
+import de.eldoria.schematicbrush.brush.history.BrushHistoryImpl;
 import de.eldoria.schematicbrush.event.PostPasteEvent;
 import de.eldoria.schematicbrush.event.PrePasteEvent;
 import de.eldoria.schematicbrush.rendering.BlockChangeCollector;
 import de.eldoria.schematicbrush.rendering.CapturingExtent;
 import de.eldoria.schematicbrush.rendering.CapturingExtentImpl;
 import de.eldoria.schematicbrush.rendering.FakeWorldImpl;
+import de.eldoria.schematicbrush.schematics.Schematic;
 import de.eldoria.schematicbrush.schematics.SchematicRegistry;
 import de.eldoria.schematicbrush.util.FAWE;
 import org.bukkit.entity.Player;
@@ -46,9 +49,11 @@ public class SchematicBrushImpl implements SchematicBrush {
     private final Plugin plugin;
     private final BrushSettings settings;
     private final UUID brushOwner;
+    @Nullable
     private BrushPaste nextPaste;
     @Nullable
     private BrushBuilder builder;
+    private final BrushHistory history = new BrushHistoryImpl(100);
 
     /**
      * Create a new schematic brush for a player.
@@ -139,19 +144,20 @@ public class SchematicBrushImpl implements SchematicBrush {
     @Override
     public Optional<Location> getBrushLocation() {
         var brushTool = getBrushTool();
-        if (brushTool.isEmpty()) return Optional.empty();
-        return Optional.ofNullable(actor().getBlockTrace(brushTool.get().getRange(), true, brushTool.get().getTraceMask()));
+        return brushTool.map(tool -> actor().getBlockTrace(tool.getRange(), true, tool.getTraceMask()));
     }
 
     private void buildNextPaste() {
-        var randomSchematicSet = settings.getRandomSchematicSet();
-        var clipboard = randomSchematicSet.getRandomSchematic();
-        if (clipboard == null) {
+        var next = settings.schematicSelection().nextSchematic(this, false);
+        if (next.isEmpty()) {
             MessageSender.getPluginMessageSender(plugin).sendError(brushOwner(),
-                    "No valid schematic was found for brush: ");
+                    "No valid schematic was found for brush");
             return;
         }
-        nextPaste = new BrushPasteImpl(settings, randomSchematicSet, clipboard);
+        if (nextPaste != null && !nextPaste.schematic().equals(next.get().second)) {
+            history.push(nextPaste.schematicSet(), nextPaste.schematic());
+        }
+        next.ifPresent(pair -> nextPaste = new BrushPasteImpl(this, settings, pair.first, pair.second));
     }
 
     /**
@@ -160,7 +166,7 @@ public class SchematicBrushImpl implements SchematicBrush {
      * @return settings
      */
     @Override
-    public BrushSettings getSettings() {
+    public BrushSettings settings() {
         return settings;
     }
 
@@ -187,5 +193,27 @@ public class SchematicBrushImpl implements SchematicBrush {
             builder = settings.toBuilder(brushOwner(), settingsRegistry, schematicRegistry);
         }
         return builder;
+    }
+
+    @Override
+    public BrushHistory history() {
+        return history;
+    }
+
+    @Override
+    public String info() {
+        Schematic schematic = nextPaste.schematic();
+        return """
+                Schematic Name: %s
+                Schematic Path: %s
+                Schematic Size: %,d
+                Effective Schematic Size: %,d
+                Schematic Format: %s
+                """.stripIndent()
+                .formatted(schematic.getFile().getName(),
+                        schematic.getFile().getPath(),
+                        schematic.size(),
+                        schematic.effectiveSize(),
+                        schematic.format().getName());
     }
 }

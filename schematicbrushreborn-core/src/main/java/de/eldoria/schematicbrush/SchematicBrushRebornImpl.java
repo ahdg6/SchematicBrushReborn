@@ -22,10 +22,7 @@ import de.eldoria.schematicbrush.brush.config.BrushSettingsRegistryImpl;
 import de.eldoria.schematicbrush.brush.config.builder.BrushBuilderSnapshotImpl;
 import de.eldoria.schematicbrush.brush.config.builder.SchematicSetBuilderImpl;
 import de.eldoria.schematicbrush.brush.config.util.Nameable;
-import de.eldoria.schematicbrush.commands.Admin;
-import de.eldoria.schematicbrush.commands.Brush;
-import de.eldoria.schematicbrush.commands.BrushPresets;
-import de.eldoria.schematicbrush.commands.Settings;
+import de.eldoria.schematicbrush.commands.*;
 import de.eldoria.schematicbrush.config.Configuration;
 import de.eldoria.schematicbrush.config.ConfigurationImpl;
 import de.eldoria.schematicbrush.config.sections.GeneralConfigImpl;
@@ -98,10 +95,10 @@ public class SchematicBrushRebornImpl extends SchematicBrushReborn {
         schematics.register(SchematicCache.STORAGE, new SchematicBrushCache(this, configuration));
         storage = storageRegistry.activeStorage();
 
-        reload();
-
         var notifyListener = new NotifyListener(this, configuration);
         renderService = new RenderService(this, configuration);
+
+        reload();
 
         MessageBlocker messageBlocker;
         if (!ServerVersion.between(ServerVersion.MC_1_19, ServerVersion.MC_1_20, ServerVersion.CURRENT_VERSION)) {
@@ -115,6 +112,7 @@ public class SchematicBrushRebornImpl extends SchematicBrushReborn {
         var adminCommand = new Admin(this, schematics, storageRegistry);
         var settingsCommand = new Settings(this, configuration, renderService, notifyListener, messageBlocker);
         var brushPresetsCommand = new BrushPresets(this, storage, messageBlocker, settingsRegistry);
+        var modifyCommand = new Modify(this, settingsRegistry);
 
         enableMetrics();
 
@@ -126,6 +124,7 @@ public class SchematicBrushRebornImpl extends SchematicBrushReborn {
         registerCommand(adminCommand);
         registerCommand(settingsCommand);
         registerCommand(brushPresetsCommand);
+        registerCommand(modifyCommand);
 
         if (configuration.general().isCheckUpdates() && UserData.get(this).isSpigotPremium()) {
             Updater.spigot(new SpigotUpdateData(this, Permissions.Admin.RELOAD, configuration.general()
@@ -137,6 +136,7 @@ public class SchematicBrushRebornImpl extends SchematicBrushReborn {
     public void reload() {
         schematics.reload();
         configuration.reload();
+        renderService.restart();
     }
 
     @Override
@@ -149,8 +149,7 @@ public class SchematicBrushRebornImpl extends SchematicBrushReborn {
     @Override
     public @NotNull EntryData[] getDebugInformations() {
         return new EntryData[]{new EntryData("Customer Data", UserData.get(this).asString()),
-                new EntryData("Performance", String.format("Render Time: %s ms%nRender Operation Queue: %s%nOperation Paket Count: %s",
-                        renderService.renderTimeAverage(), renderService.paketQueueSize(), renderService.paketQueuePaketCount()))};
+                new EntryData("Rendering", renderService.renderInfo())};
     }
 
     private void enableMetrics() {
@@ -229,4 +228,7 @@ public class SchematicBrushRebornImpl extends SchematicBrushReborn {
         return configuration;
     }
 
+    public RenderService renderService() {
+        return renderService;
+    }
 }

@@ -1,7 +1,7 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.config.sections;
@@ -51,7 +51,7 @@ public interface GeneralConfig extends ConfigurationSerializable {
      *
      * @return the message channel implementation
      */
-    MessageChannel<?> defaultNameChannel();
+    de.eldoria.schematicbrush.config.sections.MessageChannel defaultNameChannel();
 
     /**
      * The refresh interval for each player of the rendering preview.

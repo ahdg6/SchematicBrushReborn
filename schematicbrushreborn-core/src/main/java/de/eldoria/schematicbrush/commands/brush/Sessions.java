@@ -1,7 +1,7 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.commands.brush;
@@ -65,7 +65,6 @@ public class Sessions {
         var builder = getOrCreateSession(player);
 
         var selectors = builder.schematicSets().stream().map(set -> BuildUtil.renderProvider(set.selector())).collect(Collectors.joining("\n"));
-
         var composer = MessageComposer.create()
                 .text("<%s>Schematic Brush Menu", Colors.HEADING)
                 .newLine()

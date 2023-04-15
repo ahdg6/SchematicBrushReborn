@@ -1,11 +1,12 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.selector;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

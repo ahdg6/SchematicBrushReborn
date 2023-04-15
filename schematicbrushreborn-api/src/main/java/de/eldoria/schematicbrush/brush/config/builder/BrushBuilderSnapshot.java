@@ -1,11 +1,12 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.builder;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import de.eldoria.schematicbrush.brush.config.BrushSettingsRegistry;
 import de.eldoria.schematicbrush.brush.config.provider.Mutator;
 import de.eldoria.schematicbrush.brush.config.util.Nameable;
@@ -20,6 +21,7 @@ import java.util.Map;
 /**
  * Represents a snapshot of a {@link BrushBuilder}.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@clazz")
 public interface BrushBuilderSnapshot extends ConfigurationSerializable {
     @Override
     @NotNull Map<String, Object> serialize();

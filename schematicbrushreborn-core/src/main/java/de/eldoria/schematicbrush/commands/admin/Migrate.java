@@ -1,7 +1,7 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.commands.admin;
@@ -46,9 +46,9 @@ public class Migrate extends AdvancedCommand implements ITabExecutor {
         var source = storageRegistry.get(sourceNameable);
         var target = storageRegistry.get(targetNameable);
 
-        CommandAssertions.isFalse(source == null, "Source type %TYPE% is unvalid.",
+        CommandAssertions.isFalse(source == null, "Source type %TYPE% is invalid.",
                 Replacement.create("TYPE", sourceNameable.name()));
-        CommandAssertions.isFalse(target == null, "Target type %TYPE% is unvalid.",
+        CommandAssertions.isFalse(target == null, "Target type %TYPE% is invalid.",
                 Replacement.create("TYPE", targetNameable.name()));
 
 

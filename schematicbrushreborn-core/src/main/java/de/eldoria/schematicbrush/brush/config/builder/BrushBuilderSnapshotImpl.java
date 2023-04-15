@@ -1,11 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.builder;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.schematicbrush.brush.config.BrushSettingsRegistry;
 import de.eldoria.schematicbrush.brush.config.provider.Mutator;
@@ -33,7 +35,9 @@ public class BrushBuilderSnapshotImpl implements BrushBuilderSnapshot {
         placementModifier.entrySet().removeIf(entry -> entry.getValue() == null);
     }
 
-    public BrushBuilderSnapshotImpl(Map<Nameable, Mutator<?>> placementModifier, List<SchematicSetBuilder> schematicSets) {
+    @JsonCreator
+    public BrushBuilderSnapshotImpl(@JsonProperty("placementModifier") Map<Nameable, Mutator<?>> placementModifier,
+                                    @JsonProperty("schematicSets") List<SchematicSetBuilder> schematicSets) {
         this.placementModifier = placementModifier;
         this.schematicSets = schematicSets;
     }

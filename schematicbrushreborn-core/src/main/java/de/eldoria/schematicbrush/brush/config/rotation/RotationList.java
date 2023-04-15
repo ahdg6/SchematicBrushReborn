@@ -1,11 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.rotation;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.schematicbrush.brush.config.provider.Mutator;
 import org.bukkit.configuration.serialization.SerializableAs;
@@ -20,7 +22,8 @@ import java.util.stream.Collectors;
 public class RotationList extends ARotation {
     private final List<Rotation> values;
 
-    public RotationList(List<Rotation> values) {
+    @JsonCreator
+    public RotationList(@JsonProperty("values") List<Rotation> values) {
         this.values = values;
     }
 

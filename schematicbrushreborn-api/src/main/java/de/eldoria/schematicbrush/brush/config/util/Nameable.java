@@ -1,10 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.util;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a named key.
@@ -17,7 +20,8 @@ public class Nameable {
      *
      * @param name name
      */
-    protected Nameable(String name) {
+    @JsonCreator
+    public Nameable(@JsonProperty("name") String name) {
         this.name = name;
     }
 
@@ -28,8 +32,7 @@ public class Nameable {
      * @return new nameable instance
      */
     public static Nameable of(String name) {
-        return new Nameable(name) {
-        };
+        return new Nameable(name);
     }
 
     /**

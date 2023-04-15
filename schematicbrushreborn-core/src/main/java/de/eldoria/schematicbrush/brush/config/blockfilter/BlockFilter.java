@@ -1,11 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.blockfilter;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.extension.input.InputParseException;
 import com.sk89q.worldedit.function.mask.Mask;
@@ -23,7 +25,8 @@ public class BlockFilter implements Mutator<String> {
     private static final WorldEdit WORLD_EDIT = WorldEdit.getInstance();
     private final String maskString;
 
-    public BlockFilter(String maskString) {
+    @JsonCreator
+    public BlockFilter(@JsonProperty("maskString") String maskString) {
         this.maskString = maskString;
     }
 

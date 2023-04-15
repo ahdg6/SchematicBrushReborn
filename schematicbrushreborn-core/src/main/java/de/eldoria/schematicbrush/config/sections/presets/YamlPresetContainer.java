@@ -1,11 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.config.sections.presets;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.schematicbrush.storage.ContainerPagedAccess;
 import de.eldoria.schematicbrush.storage.YamlContainerPagedAccess;
@@ -39,6 +41,13 @@ public class YamlPresetContainer implements PresetContainer, ConfigurationSerial
         List<Preset> presetList = map.getValueOrDefault("presets", Collections.emptyList());
         presets = new HashMap<>();
         presetList.forEach(p -> presets.put(p.name().toLowerCase(Locale.ROOT), p));
+    }
+
+    @JsonCreator
+    public YamlPresetContainer(@JsonProperty("uuid") UUID uuid,
+                               @JsonProperty("presets") Map<String, Preset> presets) {
+        this.uuid = uuid;
+        this.presets = presets;
     }
 
     public YamlPresetContainer(UUID uuid) {

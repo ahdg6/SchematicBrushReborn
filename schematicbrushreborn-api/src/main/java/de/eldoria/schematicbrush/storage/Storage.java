@@ -1,7 +1,7 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.storage;
@@ -35,14 +35,11 @@ public interface Storage {
      * This will not remove already existing entries.
      *
      * @param storage storage with entries to add.
-     * @return A future which completes when all underlying processes are completed.
      */
 
-    default CompletableFuture<Void> migrate(Storage storage) {
-        var presets = presets().migrate(storage.presets());
-        var brushes = brushes().migrate(storage.brushes());
-
-        return CompletableFuture.allOf(presets, brushes);
+    default void migrate(Storage storage) {
+        presets().migrate(storage.presets());
+        brushes().migrate(storage.brushes());
     }
 
     /**

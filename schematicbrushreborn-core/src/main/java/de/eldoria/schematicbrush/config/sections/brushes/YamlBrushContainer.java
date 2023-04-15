@@ -1,11 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.config.sections.brushes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.schematicbrush.storage.ContainerPagedAccess;
 import de.eldoria.schematicbrush.storage.YamlContainerPagedAccess;
@@ -43,6 +45,13 @@ public class YamlBrushContainer implements BrushContainer, ConfigurationSerializ
 
     public YamlBrushContainer(UUID uuid) {
         brushes = new HashMap<>();
+        this.uuid = uuid;
+    }
+
+    @JsonCreator
+    public YamlBrushContainer(@JsonProperty("uuid") UUID uuid,
+                              @JsonProperty("brushes") Map<String, Brush> brushes) {
+        this.brushes = brushes;
         this.uuid = uuid;
     }
 

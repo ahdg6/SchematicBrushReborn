@@ -1,11 +1,13 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.brush.config.includeair;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.eldoria.eldoutilities.serialization.SerializationUtil;
 import de.eldoria.schematicbrush.brush.PasteMutation;
 import de.eldoria.schematicbrush.brush.config.provider.Mutator;
@@ -18,7 +20,8 @@ import java.util.Map;
 public class IncludeAir implements Mutator<Boolean> {
     private boolean value;
 
-    public IncludeAir(boolean value) {
+    @JsonCreator
+    public IncludeAir(@JsonProperty("value") boolean value) {
         this.value = value;
     }
 

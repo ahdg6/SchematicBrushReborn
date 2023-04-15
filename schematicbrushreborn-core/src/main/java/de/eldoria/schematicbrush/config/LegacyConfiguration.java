@@ -1,7 +1,7 @@
 /*
  *     SPDX-License-Identifier: AGPL-3.0-only
  *
- *     Copyright (C) 2021 EldoriaRPG Team and Contributor
+ *     Copyright (C) EldoriaRPG Team and Contributor
  */
 
 package de.eldoria.schematicbrush.config;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
-public class ConfigurationImpl extends EldoConfig implements Configuration {
+public class LegacyConfiguration extends EldoConfig implements Configuration {
     private static final String PRESET_FILE = "presets";
     private static final String BRUSH_FILE = "brushes";
     private SchematicConfig schematicConfig;
@@ -35,7 +35,7 @@ public class ConfigurationImpl extends EldoConfig implements Configuration {
     private Presets presets;
     private Brushes brushes;
 
-    public ConfigurationImpl(Plugin plugin) {
+    public LegacyConfiguration(Plugin plugin) {
         super(plugin);
     }
 
